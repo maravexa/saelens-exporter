@@ -1,0 +1,45 @@
+# saelens-exporter configuration
+
+model:
+  # HuggingFace model ID — must match the model running in Ollama
+  # TransformerLens loads the unquantized weights for activation extraction
+  name: "meta-llama/Llama-3.1-8B-Instruct"
+  device: "cuda"        # cuda, cpu, or auto
+  dtype: "float16"      # float16 for RX 6700 XT VRAM budget
+  max_seq_len: 512      # truncate prompts beyond this
+
+sae:
+  # SAELens pretrained SAE release
+  # See: https://jbloomaucl.github.io/SAELens/sae_table/
+  release: "meta-llama/Llama-3.1-8B-Instruct-SAE"
+  hook_point: "blocks.16.hook_resid_post"  # mid-layer residual stream
+  device: "cuda"
+
+displacement:
+  # Baseline capture: N clean prompts to establish reference distribution
+  baseline_prompts: 64
+  # Displacement is cosine distance from baseline centroid
+  # Alert threshold for anomalous displacement
+  alert_threshold: 0.35
+  # Feature dimensions to track for persona signal
+  # These get populated after baseline calibration
+  persona_feature_indices: []
+
+metrics:
+  # Textfile collector directory
+  # node_exporter or Go exporter scrapes .prom files from here
+  textfile_dir: "/var/lib/prometheus/textfile_collector"
+  # Metric prefix
+  namespace: "saelens"
+  # How often to flush metrics (seconds)
+  flush_interval: 30
+
+socket:
+  # Unix domain socket for Go control plane communication
+  path: "/tmp/saelens-exporter.sock"
+  # Max queued connections
+  backlog: 5
+
+logging:
+  level: "INFO"
+  format: "json"   # json or text

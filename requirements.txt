@@ -1,0 +1,15 @@
+# Core inference + interpretability (unavoidable Python deps)
+torch>=2.1.0
+transformer_lens>=1.14.0
+sae_lens>=3.0.0
+
+# Config + serialization (stdlib-adjacent, minimal surface)
+pyyaml>=6.0
+
+# Prometheus textfile format (no HTTP server, just .prom file writing)
+# prometheus_client is used ONLY for generate_latest() formatting
+prometheus_client>=0.20.0
+
+# Pin with hashes for production:
+#   pip-compile --generate-hashes requirements.in > requirements.txt
+#   pip-audit -r requirements.txt
