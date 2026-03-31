@@ -1,0 +1,42 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+*.whl
+requirements.lock
+
+# Go
+*.exe
+*.out
+*.test
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Prometheus textfile collector output
+*.prom
+*.prom.tmp
+
+# PyTorch / model cache
+*.pt
+*.bin
+*.safetensors
+
+# Secrets
+.env
+*.key
+*.pem

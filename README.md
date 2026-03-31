@@ -37,9 +37,33 @@ two-exporter PLG stack architecture.
 The Go exporter or `node_exporter --collector.textfile.directory` handles
 all Prometheus exposition.
 
+## Setup
+
+```bash
+# Create and activate venv
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install deps (CUDA / CPU)
+pip install -r requirements.txt
+
+# Or for ROCm 6.3 (AMD GPU — e.g. RX 6700 XT on xena)
+pip install -r requirements-rocm.txt
+
+# Install the package itself (editable for development)
+pip install -e .
+
+# Pin with hashes + audit before deploying anywhere that matters
+pip-compile --generate-hashes requirements.txt -o requirements.lock
+pip-audit -r requirements.lock
+```
+
 ## Usage
 
 ```bash
+# Activate venv
+source .venv/bin/activate
+
 # Run the worker (headless, no ports)
 python -m exporter.main --config config.yaml
 

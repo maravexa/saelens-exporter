@@ -1,0 +1,17 @@
+# ROCm 6.3 / AMD GPU requirements
+# Use this instead of requirements.txt on AMD hardware (e.g. RX 6700 XT)
+#
+# Install:
+#   pip install -r requirements-rocm.txt
+
+--extra-index-url https://download.pytorch.org/whl/rocm6.3
+
+torch>=2.1.0
+transformer_lens>=1.14.0
+sae_lens>=3.0.0
+pyyaml>=6.0
+prometheus_client>=0.20.0
+
+# Pin with hashes for production:
+#   pip-compile --generate-hashes requirements-rocm.txt -o requirements-rocm.lock
+#   pip-audit -r requirements-rocm.lock

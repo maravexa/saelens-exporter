@@ -38,7 +38,10 @@ COPY --from=builder /install /usr/local
 
 # Copy application code
 COPY exporter/ ./exporter/
-COPY config.yaml .
+COPY config.yaml pyproject.toml ./
+
+# Install package so python -m exporter.main resolves
+RUN pip install --no-cache-dir -e .
 
 # Own the textfile dir mount point
 RUN mkdir -p /var/lib/prometheus/textfile_collector && \
