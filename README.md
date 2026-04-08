@@ -11,21 +11,28 @@ two-exporter PLG stack architecture.
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────┐
-│  Go Control Plane (ollama-exporter)              │
-│  - Prometheus /metrics endpoint                  │
-│  - Operational metrics (tok/s, latency, VRAM)    │
-│  - Scrapes textfile collector dir for SAE metrics │
-├─────────────────────────────────────────────────┤
-│  Unix Domain Socket (command/response protocol)  │
-├─────────────────────────────────────────────────┤
-│  Python Worker (this repo)                       │
-│  - TransformerLens activation extraction         │
-│  - SAELens sparse autoencoder decomposition      │
-│  - Persona displacement vector computation       │
-│  - Writes .prom files to textfile collector dir   │
-└─────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph go["Go Control Plane (ollama-exporter)"]
+        prom["/metrics endpoint"]
+        ops["Operational metrics\n(tok/s, latency, VRAM)"]
+        scrape["Scrapes textfile collector dir\nfor SAE metrics"]
+    end
+
+    sock(["Unix Domain Socket\n/tmp/saelens-exporter.sock"])
+
+    subgraph py["Python Worker (this repo)"]
+        tl["TransformerLens\nactivation extraction"]
+        sae["SAELens sparse autoencoder\ndecomposition"]
+        disp["Persona displacement\nvector computation"]
+        promfile["Writes .prom files to\ntextfile collector dir"]
+    end
+
+    go <-->|"command / response"| sock
+    sock <-->|"command / response"| py
+    promfile -.->|".prom files"| scrape
+    prom -->|"Prometheus scrape"| ops
+    prom -->|"Prometheus scrape"| scrape
 ```
 
 ## Network Surface
